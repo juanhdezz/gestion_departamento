@@ -38,6 +38,15 @@
                         placeholder="Enter your password" required>
                 </div>
 
+                <!-- Select Type of User -->
+                <div class="relative">
+                    <label for="user_type" class="block text-sm font-medium text-gray-700">I am a</label>
+                    <select name="user_type" id="user_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition">
+                        <option value="professor">Professor</option>
+                        <option value="trainee">Trainee</option>
+                    </select>
+                </div>
+
                 <button type="submit"
                     class="w-full py-2 bg-gradient-to-r from-blue-500 to-green-400 text-white font-bold rounded-lg shadow-lg hover:opacity-90 transform hover:scale-105 transition duration-300">
                     Login

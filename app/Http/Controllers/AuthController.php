@@ -6,60 +6,50 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-
 class AuthController extends Controller
 {
-    /**
-     * Mostrar el formulario de inicio de sesión.
-     */
     public function showLoginForm()
     {
-        return view('auth.login'); // Asegúrate de que esta vista exista.
+        return view('auth.login');
     }
 
-    /**
-     * Manejar el inicio de sesión del usuario.
-     */
     public function login(Request $request)
     {
-        // Validar las credenciales de entrada
         $credentials = $request->validate([
-            'login' => 'required|string',  // Asumo que el campo 'login' es el que usas para el identificador
+            'login' => 'required|string',
             'password' => 'required|string',
+            'user_type' => 'required|in:professor,trainee',
         ]);
 
-        // Intentar autenticar al profesor
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate(); // Proteger la sesión contra fijación
+        $guard = $credentials['user_type'] === 'professor' ? 'web' : 'trainee';
 
-            // Obtener el profesor autenticado
-            $professor = Auth::user();  // Obtiene el profesor autenticado
+        // Intentar autenticar con el guard correspondiente
+        if (Auth::guard($guard)->attempt(['login' => $credentials['login'], 'password' => $credentials['password']])) {
+            $request->session()->regenerate();
+
+            // Obtener el usuario autenticado
+            $user = Auth::guard($guard)->user();
+            if($guard === 'web'){
+                $user->last_access = Carbon::now();  // Actualizar 'last_access'
+                $user->save();
+            }
             
-            // Actualizar el campo 'last_access' del profesor autenticado
-            $professor->last_access = Carbon::now();  // Actualiza la columna 'last_access'
-            $professor->save(); // ignorar error
-            // Guardar los cambios en la base de datos
-            // Redirigir al dashboard
-            return redirect()->intended(route('dashboard'));
+            return redirect()->route('dashboard');
         }
-        
 
-        // Si falla, volver al formulario con un mensaje de error
+        // Si las credenciales son incorrectas
         return back()->withErrors([
-            'login' => 'The provided credentials do not match our records.',
+            'login' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
         ]);
     }
 
-    /**
-     * Cerrar la sesión del usuario.
-     */
     public function logout(Request $request)
     {
-        Auth::logout(); // Cerrar sesión
+        Auth::logout();  // Cerrar sesión
 
         $request->session()->invalidate();
-        $request->session()->regenerateToken(); // Regenerar el token CSRF
+        $request->session()->regenerateToken();
 
-        return redirect()->route('home'); // Ajusta la ruta si es necesario
+        return redirect()->route('home');
     }
 }
