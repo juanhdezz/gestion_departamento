@@ -13,11 +13,11 @@
             <!-- Buttons -->
             <div class="flex flex-wrap justify-center gap-6">
                 <a href="{{ route('login.form') }}" class="bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
-                    Access as Professor
+                    Login
                 </a>
-                <a href="#" class="bg-gradient-to-r from-yellow-600 to-orange-500 hover:from-yellow-700 hover:to-orange-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
-                    Access as Becario (Coming Soon)
-                </a>
+                {{-- <a href="#" class="bg-gradient-to-r from-yellow-600 to-orange-500 hover:from-yellow-700 hover:to-orange-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Access as Becario (Coming Soon) // al final he metido los dos login en uno solo, con opcion para indicar tu rol
+                </a> --}}
             </div>
         </div>
     </div>
